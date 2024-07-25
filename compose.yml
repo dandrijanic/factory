@@ -1,0 +1,46 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+      args:
+        UID: ${UID-1000}
+        GID: ${GID-1000}
+    volumes:
+      - .:/var/www
+    networks:
+      - factory
+
+  nginx:
+    image: nginx:alpine-slim
+    ports:
+      - ${NGINX_HTTP_PORT-80}:80
+      - ${NGINX_HTTPS_PORT-443}:443
+    environment:
+      - "DOMAIN=${DOMAIN}"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - factory
+
+  db:
+    image: mysql:lts
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME-database}
+      MYSQL_USER: ${DB_USER-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD-password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD-root}
+    ports:
+      - ${DB_PORT-3306}:3306
+    volumes:
+      - db:/var/lib/mysql:rw
+    networks:
+      - factory
+
+networks:
+  factory:
+
+volumes:
+  db: {}
