@@ -1,5 +1,11 @@
 services:
   php:
+    # environment:
+    # PHP_IDE_CONFIG: serverName=factory.local
+    # XDEBUG_REMOTE_HOST: ${PHP_XDEBUG_HOST-localhost}
+    # XDEBUG_REMOTE_PORT: ${PHP_XDEBUG_PORT-9003}
+    # XDEBUG_PROFILER_OUTPUT_DIR: ${PHP_XDEBUG_PROFILER_OUTPUT_DIR}
+    # COMPOSER_ALLOW_XDEBUG: '1'
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
@@ -8,8 +14,10 @@ services:
         GID: ${GID-1000}
     volumes:
       - .:/var/www
-    networks:
-      - factory
+      # - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/custom-xdebug.ini
+
+    # networks:
+    #   - factory
 
   nginx:
     image: nginx:alpine-slim
@@ -21,8 +29,8 @@ services:
     volumes:
       - .:/var/www
       - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - factory
+    # networks:
+    #   - factory
 
   db:
     image: mysql:lts
@@ -36,11 +44,11 @@ services:
       - ${DB_PORT-3306}:3306
     volumes:
       - db:/var/lib/mysql:rw
-    networks:
-      - factory
+    # networks:
+    #   - factory
 
-networks:
-  factory:
+# networks:
+#   factory:
 
 volumes:
   db: {}

@@ -44,4 +44,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function billingDetails()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function shippingDetails()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function contractLists()
+    {
+        return $this->hasMany(ContractList::class);
+    }
 }

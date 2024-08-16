@@ -26,3 +26,11 @@ init: ## Runs init script
 
 migrate: ## Runs migrations
 	docker compose exec php php artisan migrate
+
+refresh: ## Database refresh and seed
+	docker compose exec php php artisan db:wipe
+	docker compose exec php php artisan migrate
+	docker compose exec php php artisan db:seed
+
+test: ## Database refresh and seed
+	docker compose exec php php artisan test
